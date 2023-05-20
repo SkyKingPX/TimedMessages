@@ -1,0 +1,23 @@
+name: TimedMessages
+version: '${project.version}'
+main: mc.timed_messages.timedmessages.TimedMessages
+api-version: 1.19
+authors: [ SkyKing_PX ]
+description: Sends tips, warnings and more in the chat
+commands:
+  timedmessages:
+    aliases: tm
+    description: The basic command to access the plugin commands.
+    usage: /<command> [settmmsg|setperiod|reloadconfig]
+    permission: tm.basic
+  settimedmessage:
+    aliases:
+      - settmmsg
+    description: Sets a timed message which is also stored in the config
+    usage: /<command> "[message]"
+    permission: tm.settimedmessage
+  setperiod:
+    description: sets the period (in seconds) in which the messages are sent
+    usage: /<command> [period - in seconds]
+    permission: tm.setperiod
+    aliases: setprd
