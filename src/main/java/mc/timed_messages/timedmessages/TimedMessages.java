@@ -1,14 +1,10 @@
 package mc.timed_messages.timedmessages;
 
 
-import mc.timed_messages.timedmessages.commands.setperiodCommand;
-import mc.timed_messages.timedmessages.commands.settimedmessageCommand;
-import mc.timed_messages.timedmessages.commands.timedmessagesCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,6 +24,9 @@ public final class TimedMessages extends JavaPlugin {
         return plugin.getConfig();
     }
 
+    //Version control
+    double plugin_version = 2.0;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -36,7 +35,7 @@ public final class TimedMessages extends JavaPlugin {
 
         //this.getCommand("settimedmessage").setExecutor(new settimedmessageCommand(plugin));
         //this.getCommand("setperiod").setExecutor(new setperiodCommand(plugin));
-        this.getCommand("timedmessages").setExecutor(new timedmessagesCommand(plugin));
+        this.getCommand("timedmessages").setExecutor(this);
 
         // Setup config - TechnicJelle
 
@@ -63,7 +62,7 @@ public final class TimedMessages extends JavaPlugin {
                             "| Information:\n" +
                             "|   Name: TimedMessages\n" +
                             "|   Developer: SkyKing_PX\n" +
-                            "|   Version: 2.0\n" +
+                            "|   Version: " + plugin_version + "\n" +
                             "| Support:\n" +
                             "|   Discord: SkyKing_PX#3612\n" +
                             "|   GitHub: https://bit.ly/3ZZ8cCF\n" +
@@ -92,7 +91,7 @@ public final class TimedMessages extends JavaPlugin {
                             "| Information:\n" +
                             "|   Name: TimedMessages\n" +
                             "|   Developer: SkyKing_PX\n" +
-                            "|   Version: 2.0\n" +
+                            "|   Version: " + plugin_version + "\n" +
                             "| Support:\n" +
                             "|   Discord: SkyKing_PX#3612\n" +
                             "|   GitHub: https://bit.ly/3ZZ8cCF\n" +
@@ -162,9 +161,53 @@ public final class TimedMessages extends JavaPlugin {
 
                 }
             }
+            if (!sender.hasPermission("tm.setperiod")) {
+
+                sender.sendMessage(ChatColor.RED + "You have not the permission to run this command!");
+                return true;
+
+            } else if (sender.hasPermission("tm.setperiod")) {
+
+                if (args.length == 0) {
+
+                    sender.sendMessage(ChatColor.AQUA + "Usage: /tm reloadconfig|settmmsg|setperiod");
+                    return true;
+
+                }
+                if (args.length > 0) {
+
+                    if (args[0].equalsIgnoreCase("setperiod")) {
+                        String period;
+                        if (!args[1].isEmpty()){
+
+                            Long.parseLong(args[1]);
+
+                            if (args[1].) {
+
+                                period = args[1];
+                                this.getConfig().set(period , "period");
+                                this.saveDefaultConfig();
+                                return true;
+
+                            }else{
+
+                                sender.sendMessage(ChatColor.RED + "The period argument is not acceptable!");
+                                return true;
+
+                            }
 
 
-    }return false;
+
+                        }else {
+                            sender.sendMessage(ChatColor.AQUA + "Usage: /tm setperiod <period in seconds>");
+                        }
+
+                    }
+                }
+
+            }
+
+            }return false;
     }
 
 }

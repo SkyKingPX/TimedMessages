@@ -20,4 +20,3 @@ commands:
     description: sets the period (in seconds) in which the messages are sent
     usage: /<command> [period - in seconds]
     permission: tm.setperiod
-    aliases: setprd
