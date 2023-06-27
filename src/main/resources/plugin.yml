@@ -3,10 +3,9 @@ version: '${project.version}'
 main: mc.skyking_px.timedmessages.TimedMessages
 api-version: 1.13
 authors: [ SkyKing_PX ]
-description: Sends tips, warnings and more in the chat
+description: Sends configured messages in the chat
 commands:
-  timedmessages:
-    aliases: tm
+  tm:
     description: The basic command to access the plugin commands.
     usage: /<command> [settmmsg|setperiod|reloadconfig]
     permission: tm.basic

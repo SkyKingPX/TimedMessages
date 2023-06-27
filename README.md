@@ -1,16 +1,14 @@
-# TimedMessages Plugin for Spigot 1.19.2
+# TimedMessages Plugin for Spigot 1.13 - 1.20+
 
 Sends configured messages in the chat
 
-### NOT WORKING YET!
+## Features / Commands
 
-## Features
+Create your Messages Ingame or in the config.yml. (/tm settmmsg).
 
-Create your Messages Ingame or in the config.yml. (/settimedmessage or /settmmsg).
+Set your period in which the messages are sent (/tm setperiod)
 
-Set your period in which the messages are sent (/setperiod)
-
-
+Reload the config file (/tm reloadconfig)
 
 ## Installation
 
@@ -18,11 +16,11 @@ Simply put the .jar in your .\plugins folder
 
 ## To Do List
 
-Find a way to remove timed messages ingame
+Find a way to remove timed messages ingame (/tm remtmmsg)
 
 ## Support
 
-Create a new Issue
+Discord Server: https://discord.gg/exyBDXgzNf
 
 ## Thanks to...
 
