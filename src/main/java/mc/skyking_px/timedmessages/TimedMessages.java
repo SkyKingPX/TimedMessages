@@ -21,14 +21,17 @@ public final class TimedMessages extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        int pluginId = 18759;
-        Metrics metrics = new Metrics(this, pluginId);
+        //bStats Metrics
 
-        // Plugin startup logic
+        Metrics metrics = new Metrics(this, 18759);
+
+        //Save config
 
         this.saveDefaultConfig();
 
-        this.getCommand("tm").setExecutor(this);
+        //register Commands
+
+        this.getCommand("tm").setExecutor(new TimedMessages());
 
         // Setup config - TechnicJelle
 
@@ -46,6 +49,7 @@ public final class TimedMessages extends JavaPlugin {
 
 
         //Load config from disk - TechnicJelle
+
         reloadConfig();
 
         //Load config values into variables - TechnicJelle
@@ -77,21 +81,7 @@ public final class TimedMessages extends JavaPlugin {
         }
     }
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
 
-        System.out.println( "\n[]=====[Disabling TimedMessages]=====[]\n" +
-                "| Information:\n" +
-                "|   Name: TimedMessages\n" +
-                "|   Developer: SkyKing_PX\n" +
-                "|   Version: " + plugin_version + "\n" +
-                "| Support:\n" +
-                "|   Discord: SkyKing_PX\n" +
-                "|      Server: https://bit.ly/3Ne5O6A\n" +
-                "|   GitHub: https://bit.ly/3ZZ8cCF\n" +
-                "[]===================================[]\n");
-    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("tm")){
@@ -218,6 +208,22 @@ public final class TimedMessages extends JavaPlugin {
 
         }return false;
     }
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+
+        System.out.println( "\n[]=====[Disabling TimedMessages]=====[]\n" +
+                "| Information:\n" +
+                "|   Name: TimedMessages\n" +
+                "|   Developer: SkyKing_PX\n" +
+                "|   Version: " + plugin_version + "\n" +
+                "| Support:\n" +
+                "|   Discord: SkyKing_PX\n" +
+                "|      Server: https://bit.ly/3Ne5O6A\n" +
+                "|   GitHub: https://bit.ly/3ZZ8cCF\n" +
+                "[]===================================[]\n");
+    }
 
 }
+
 
