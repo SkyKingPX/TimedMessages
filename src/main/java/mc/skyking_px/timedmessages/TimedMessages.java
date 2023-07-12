@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -17,6 +18,9 @@ public final class TimedMessages extends JavaPlugin {
 
     //Version control
     double plugin_version = 1.0;
+
+    FileConfiguration config = this.getConfig();
+
 
     @Override
     public void onEnable() {
@@ -35,7 +39,7 @@ public final class TimedMessages extends JavaPlugin {
 
         // Setup config - TechnicJelle
 
-        if(getDataFolder().mkdirs()) getLogger().info("Created plugin config directory");
+        /*if(getDataFolder().mkdirs()) getLogger().info("Created plugin config directory");
         File configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) {
             try {
@@ -44,13 +48,14 @@ public final class TimedMessages extends JavaPlugin {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
 
 
         //Load config from disk - TechnicJelle
 
-        reloadConfig();
+        //reloadConfig();
+        this.getConfig();
 
         //Load config values into variables - TechnicJelle
         long period = getConfig().getLong("period");
@@ -191,8 +196,12 @@ public final class TimedMessages extends JavaPlugin {
                             if (!args[1].isEmpty()) {
 
                                 period = args[1];
-                                this.getConfig().set(period, "period");
-                                this.saveConfig();
+                                //this.getConfig().set(period, "period");
+                                if (config.contains("period")){
+                                    config.set("period", args[1]);
+                                }else config.addDefault("period", args[1]);
+                                config.options().copyDefaults(true);
+                                saveConfig();
                                 sender.sendMessage(ChatColor.GREEN + "Data stored! Make sure to use a Integer here. Run /tm reloadconfig to reload the plugin.");
                                 return true;
 
