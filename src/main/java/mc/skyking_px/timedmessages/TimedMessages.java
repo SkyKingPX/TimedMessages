@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public final class TimedMessages extends JavaPlugin {
 
@@ -71,8 +72,12 @@ public final class TimedMessages extends JavaPlugin {
                 "|   GitHub: https://bit.ly/3ZZ8cCF\n" +
                 "[]==================================[]\n");
 
+        int messagescount = plugin.getConfig().
+
+        int randomNum = ThreadLocalRandom.current().nextInt(1, messagescount + 1);
+
         for (String msg : this.getConfig().getStringList("messages")){
-            List<String> messages = new ArrayList<>();
+            ArrayList messages = TimedMessages.getConfig().getString("messages");
             messages.add(ChatColor.translateAlternateColorCodes('&', msg ));
             //messages.add("§l§4[§6Warnung§4] §r§lWenn du die Regeln nicht befolgst kommt es zu einem §cBan!");
             //messages.add("§l§4[§6Warnung§4] §r§lLasse keine AFK-Farmen eingeschaltet, wenn du aus den Chunks gehst oder der Server gestoppt/neugestartet wird!");
@@ -195,7 +200,6 @@ public final class TimedMessages extends JavaPlugin {
                             String period;
                             if (!args[1].isEmpty()) {
 
-                                period = args[1];
                                 //this.getConfig().set(period, "period");
                                 if (config.contains("period")){
                                     config.set("period", args[1]);
