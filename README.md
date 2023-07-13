@@ -1,3 +1,5 @@
+NOTE: This plugin doesn't work yet.
+
 # TimedMessages Plugin for Spigot 1.13 - 1.20+
 
 Sends configured messages in the chat
