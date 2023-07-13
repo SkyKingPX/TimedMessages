@@ -7,5 +7,5 @@ description: Sends configured messages in the chat
 commands:
   tm:
     description: The basic command to access the plugin commands.
-    usage: /<command> [settmmsg|setperiod|reloadconfig]
+    usage: /<command> reloadconfig | settmmsg | setperiod
     permission: tm.basic
