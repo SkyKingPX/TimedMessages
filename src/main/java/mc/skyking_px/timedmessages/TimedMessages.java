@@ -11,6 +11,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -19,6 +20,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static com.sun.org.apache.xml.internal.serializer.utils.Utils.messages;
 
 public final class TimedMessages extends JavaPlugin {
 
@@ -63,13 +66,22 @@ public final class TimedMessages extends JavaPlugin {
         if (period < 1){
             System.out.println("Period variable is not defined. Please set a period with '/tm setperiod'.");
         } else if (period > 0) {
-            for (String msg : this.getConfig().getStringList("messages")){
-                ArrayList messages = null;
-                messages.add(this.getConfig().getStringList("messages" + ChatColor.translateAlternateColorCodes('&', msg )));
-                BukkitScheduler msgScheduler = Bukkit.getScheduler();
-                msgScheduler.runTaskTimer(this, Bukkit.broadcastMessage(messages.get(new Random().nextInt(messages.size())), 20L * period));
+            BukkitRunnable runnable = new BukkitRunnable() {
+                int var;
+                @Override
+                public void run() {
+
+                    String message = config.getString(messages.);
+                    BukkitRunnable.runTaskTimer(this, Bukkit.broadcastMessage(message), 20L * period);
+                }
+            };
+
+            //for (String msg : this.getConfig().getStringList("messages")){
+
+            //    messages.add(this.getConfig().getStringList("messages" + ChatColor.translateAlternateColorCodes('&', msg )));
+            //    BukkitScheduler msgScheduler = Bukkit.getScheduler();
+            //    msgScheduler.runTaskTimer(this, Bukkit.broadcastMessage(messages.get(new Random().nextInt(messages.size())), 20L * period));
             }
-        }
 
         System.out.println( "\n[]=====[Enabling TimedMessages]=====[]\n" +
                 "| Information:\n" +
