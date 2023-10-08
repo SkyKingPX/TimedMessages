@@ -7,21 +7,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-
-import static com.sun.org.apache.xml.internal.serializer.utils.Utils.messages;
 
 public final class TimedMessages extends JavaPlugin {
 
@@ -30,6 +25,10 @@ public final class TimedMessages extends JavaPlugin {
 
     FileConfiguration config = this.getConfig();
 
+    public void loadConfiguration() {
+        this.getConfig().options().copyDefaults(true);
+        this.saveConfig();
+    }
 
     @Override
     public void onEnable() {
@@ -38,50 +37,51 @@ public final class TimedMessages extends JavaPlugin {
 
         Metrics metrics = new Metrics(this, 18759);
 
-        //Save config
-
-        this.saveDefaultConfig();
-
         //register Commands and Tab Completion
 
-        this.getCommand("tm").setExecutor(new TimedMessages());
+        this.getCommand("tm").setExecutor(this);
         this.getCommand("tm").setTabCompleter(new tmCommandTabCompletion());
 
-        // Setup config - TechnicJelle
+        // Config Defaults
 
-        /*if(getDataFolder().mkdirs()) getLogger().info("Created plugin config directory");
+        this.getConfig().addDefault("messages", "This is a default message. For now you can only change it in the config.yml.");
+        this.getConfig().addDefault("period", 600);
+
+        // Setup config - Code by TechnicJelle
+
+        if(getDataFolder().mkdirs()) getLogger().info("Created plugin config directory");
         File configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) {
             try {
                 getLogger().info("Creating config file");
+                this.getConfig().options().copyDefaults(true);
                 Files.copy(Objects.requireNonNull(getResource("config.yml")), configFile.toPath());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }*/
+        }
 
-        this.getConfig();
+        loadConfiguration();
 
         long period = getConfig().getLong("period");
         if (period < 1){
             System.out.println("Period variable is not defined. Please set a period with '/tm setperiod'.");
         } else if (period > 0) {
-            BukkitRunnable runnable = new BukkitRunnable() {
+            /*BukkitRunnable runnable = new BukkitRunnable() {
                 int var;
                 @Override
                 public void run() {
-
-                    String message = config.getString(messages.);
+                    String msgpath = "messages." + var;
+                    String message = config.getString(msgpath);
                     BukkitRunnable.runTaskTimer(this, Bukkit.broadcastMessage(message), 20L * period);
                 }
-            };
-
-            //for (String msg : this.getConfig().getStringList("messages")){
-
-            //    messages.add(this.getConfig().getStringList("messages" + ChatColor.translateAlternateColorCodes('&', msg )));
-            //    BukkitScheduler msgScheduler = Bukkit.getScheduler();
-            //    msgScheduler.runTaskTimer(this, Bukkit.broadcastMessage(messages.get(new Random().nextInt(messages.size())), 20L * period));
-            }
+            };*/
+            /*for (Object messages : this.getConfig().getList("messages")).add(this.getConfig().getStringList("messages" + ChatColor.translateAlternateColorCodes('&', msg)));
+            {
+                BukkitScheduler msgScheduler = Bukkit.getScheduler();
+                msgScheduler.runTaskTimer(this, Bukkit.broadcastMessage(messages.get(new Random().nextInt(messages.size())), 20L * period));
+            }*/
+        }
 
         System.out.println( "\n[]=====[Enabling TimedMessages]=====[]\n" +
                 "| Information:\n" +
@@ -97,16 +97,19 @@ public final class TimedMessages extends JavaPlugin {
 
     }
 
+    // isInt check
+    public boolean isInt(String str) {
+        try {
+            Integer.parseInt(str);
+        } catch (Throwable e) {
+            return false;
+        }
+        return true;
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("tm")) {
-            if (sender.hasPermission("tm.basic")){
-
-                List<String> arguments = new ArrayList<>();
-                arguments.add("settmmsg");
-                arguments.add("setperiod");
-                arguments.add("reloadConfig");
 
                 if (!sender.hasPermission("tm.reloadconfig")) {
 
@@ -124,8 +127,7 @@ public final class TimedMessages extends JavaPlugin {
 
                         if (args[0].equalsIgnoreCase("reloadconfig")) {
                             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aReloading Config!"));
-                            this.getConfig();
-                            this.saveConfig();
+                            loadConfiguration();
                             this.reloadConfig();
                             return true;
                         } else sender.sendMessage(ChatColor.AQUA + "Usage: /tm reloadconfig | settmmsg | setperiod");
@@ -154,15 +156,17 @@ public final class TimedMessages extends JavaPlugin {
 
                             if (!args[1].isEmpty()) {
 
-                                String messages = args[1];
-                                this.getConfig().set(messages, "messages");
+                                StringJoiner m = new StringJoiner(" ");
+                                for(int i = 1; i < args.length; i++)
+                                    m.add(args[i]);
+                                this.getConfig().addDefault("messages", m);
                                 this.saveConfig();
-                                sender.sendMessage(ChatColor.GREEN + "Data stored! Run /tm reloadconfig to reload the plugin.");
+                                sender.sendMessage(ChatColor.GREEN + "Data saved! Run /tm reloadconfig to reload the plugin.");
                                 return true;
 
 
                             } else {
-                                sender.sendMessage(ChatColor.AQUA + "Usage: /tm settmmsg <message in double quotation marks>");
+                                sender.sendMessage(ChatColor.AQUA + "Usage: /tm settmmsg <message>");
                             }
 
                     } else sender.sendMessage(ChatColor.AQUA + "Usage: /tm reloadconfig | settmmsg | setperiod");
@@ -212,12 +216,17 @@ public final class TimedMessages extends JavaPlugin {
                         if (args[0].equalsIgnoreCase("setperiod")) {
                             String period;
                             if (!args[1].isEmpty()) {
+                                if (isInt(args[1])){
 
-                                this.getConfig().getString("period", args[1]);
-                                saveConfig();
-                                sender.sendMessage(ChatColor.GREEN + "Data stored! Make sure to use a Integer here. Run /tm reloadconfig to reload the plugin.");
-                                return true;
+                                    this.getConfig().getString("period", args[1]);
+                                    saveConfig();
+                                    sender.sendMessage(ChatColor.GREEN + "Data save! Make sure to use a Integer here. Run /tm reloadconfig to reload the plugin.");
+                                    return true;
 
+                                } else {
+                                    sender.sendMessage(ChatColor.RED + "A Number is required here!");
+                                    return true;
+                                }
                             } else {
                                 sender.sendMessage(ChatColor.AQUA + "Usage: /tm setperiod <period in seconds>");
                             }
@@ -228,7 +237,7 @@ public final class TimedMessages extends JavaPlugin {
                 }
             }
         }
-        }return false;
+        return false;
     }
     @Override
     public void onDisable() {
