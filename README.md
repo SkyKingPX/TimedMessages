@@ -26,7 +26,7 @@ Discord Server: https://discord.gg/exyBDXgzNf
 
 ## Collaborators
 
-• SkyproPX
+• SkyproPX(, who wants to learn coding too)
 
 ## Thanks to...
 
