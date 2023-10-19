@@ -22,14 +22,12 @@ Simply put the .jar in your .\plugins folder
 
 ## Support
 
-Discord Server: https://discord.gg/exyBDXgzNf
+Discord Server: Coming soon
 
 ## Collaborators
 
 • SkyproPX(, who wants to learn coding too)
 
 ## Thanks to...
-
-• Hannes - Array list and random message pick function
 
 • [TechnicJelle](https://github.com/TechnicJelle) - Helping to create the config.yml and using it
