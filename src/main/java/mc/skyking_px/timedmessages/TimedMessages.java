@@ -33,20 +33,6 @@ public final class TimedMessages extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        //bStats Metrics
-
-        Metrics metrics = new Metrics(this, 18759);
-
-        //register Commands and Tab Completion
-
-        this.getCommand("tm").setExecutor(this);
-        this.getCommand("tm").setTabCompleter(new tmCommandTabCompletion());
-
-        // Config Defaults
-
-        this.getConfig().addDefault("messages", "This is a default message. For now you can only change it in the config.yml.");
-        this.getConfig().addDefault("period", 600);
-
         // Setup config - Code by TechnicJelle
 
         if(getDataFolder().mkdirs()) getLogger().info("Created plugin config directory");
@@ -60,6 +46,20 @@ public final class TimedMessages extends JavaPlugin {
                 e.printStackTrace();
             }
         }
+
+        //bStats Metrics
+
+        Metrics metrics = new Metrics(this, 18759);
+
+        //register Commands and Tab Completion
+
+        this.getCommand("tm").setExecutor(this);
+        this.getCommand("tm").setTabCompleter(new tmCommandTabCompletion());
+
+        // Config Defaults
+
+        this.getConfig().addDefault("messages", "This is a default message. For now you can only change it in the config.yml.");
+        this.getConfig().addDefault("period", 600);
 
         loadConfiguration();
 
@@ -111,6 +111,9 @@ public final class TimedMessages extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("tm")) {
 
+            int configVersion = (int) this.getConfig().get("config-version");
+
+            if (configVersion == 1){
                 if (!sender.hasPermission("tm.reloadconfig")) {
 
                     sender.sendMessage(ChatColor.RED + "You have not the permission to run this command!");
@@ -157,7 +160,7 @@ public final class TimedMessages extends JavaPlugin {
                             if (!args[1].isEmpty()) {
 
                                 StringJoiner m = new StringJoiner(" ");
-                                for(int i = 1; i < args.length; i++)
+                                for (int i = 1; i < args.length; i++)
                                     m.add(args[i]);
                                 this.getConfig().addDefault("messages", m);
                                 this.saveConfig();
@@ -169,42 +172,15 @@ public final class TimedMessages extends JavaPlugin {
                                 sender.sendMessage(ChatColor.AQUA + "Usage: /tm settmmsg <message>");
                             }
 
-                    } else sender.sendMessage(ChatColor.AQUA + "Usage: /tm reloadconfig | settmmsg | setperiod");
-                }
-
-            /* if (!sender.hasPermission("tm.remtmmsg")) {
-
-                sender.sendMessage(ChatColor.RED + "You have not the permission to run this command!");
-                return true;
-
-            } else if (sender.hasPermission("tm.remtmmsg")) {
-                if (args.length == 0) {
-
-                    sender.sendMessage(ChatColor.AQUA + "Usage: /tm reloadconfig | settmmsg | setperiod");
-                    return true;
-
-                }
-                if (args.length > 0) {
-
-                    if (args[0].equalsIgnoreCase("remtmmsg")) {
-                        String targetMessage = "messages." + Integer.parseInt(args[1]);
-                        this.getConfig().set(messages.targetMessage ,null);
-
-                    }else {
-
-                        sender.sendMessage(ChatColor.AQUA + "Usage: /tm remtmmsg <Number of the message>");
-
+                        } else sender.sendMessage(ChatColor.AQUA + "Usage: /tm reloadconfig | settmmsg | setperiod");
                     }
 
-                }
-            } */
-                if (!sender.hasPermission("tm.setperiod")) {
+                /* if (!sender.hasPermission("tm.remtmmsg")) {
 
                     sender.sendMessage(ChatColor.RED + "You have not the permission to run this command!");
                     return true;
 
-                } else if (sender.hasPermission("tm.setperiod")) {
-
+                } else if (sender.hasPermission("tm.remtmmsg")) {
                     if (args.length == 0) {
 
                         sender.sendMessage(ChatColor.AQUA + "Usage: /tm reloadconfig | settmmsg | setperiod");
@@ -213,29 +189,58 @@ public final class TimedMessages extends JavaPlugin {
                     }
                     if (args.length > 0) {
 
-                        if (args[0].equalsIgnoreCase("setperiod")) {
-                            String period;
-                            if (!args[1].isEmpty()) {
-                                if (isInt(args[1])){
+                        if (args[0].equalsIgnoreCase("remtmmsg")) {
 
-                                    this.getConfig().getString("period", args[1]);
-                                    saveConfig();
-                                    sender.sendMessage(ChatColor.GREEN + "Data save! Make sure to use a Integer here. Run /tm reloadconfig to reload the plugin.");
-                                    return true;
+                            String targetMessage = "messages." + Integer.parseInt(args[1]);
+                            this.getConfig().set(messages.targetMessage ,null);
 
-                                } else {
-                                    sender.sendMessage(ChatColor.RED + "A Number is required here!");
-                                    return true;
-                                }
-                            } else {
-                                sender.sendMessage(ChatColor.AQUA + "Usage: /tm setperiod <period in seconds>");
-                            }
+                        }else {
 
-                        } else sender.sendMessage(ChatColor.AQUA + "Usage: /tm reloadconfig | settmmsg | setperiod");
+                            sender.sendMessage(ChatColor.AQUA + "Usage: /tm remtmmsg <Number of the message>");
+
+                        }
+
                     }
+                } */
+                    if (!sender.hasPermission("tm.setperiod")) {
 
+                        sender.sendMessage(ChatColor.RED + "You have not the permission to run this command!");
+                        return true;
+
+                    } else if (sender.hasPermission("tm.setperiod")) {
+
+                        if (args.length == 0) {
+
+                            sender.sendMessage(ChatColor.AQUA + "Usage: /tm reloadconfig | settmmsg | setperiod");
+                            return true;
+
+                        }
+                        if (args.length > 0) {
+
+                            if (args[0].equalsIgnoreCase("setperiod")) {
+                                if (!args[1].isEmpty()) {
+                                    if (isInt(args[1])) {
+
+                                        this.getConfig().getString("period", args[1]);
+                                        saveConfig();
+                                        sender.sendMessage(ChatColor.GREEN + "Data saved! Run /tm reloadconfig to reload the plugin.");
+                                        return true;
+
+                                    } else {
+                                        sender.sendMessage(ChatColor.RED + "A Number is required here!");
+                                        return true;
+                                    }
+                                } else {
+                                    sender.sendMessage(ChatColor.AQUA + "Usage: /tm setperiod <period in seconds>");
+                                }
+
+                            } else
+                                sender.sendMessage(ChatColor.AQUA + "Usage: /tm reloadconfig | settmmsg | setperiod");
+                        }
+
+                    }
                 }
-            }
+            } else sender.sendMessage(ChatColor.RED + "Seems like your config is broken or the Config version isn't supported yet.");
         }
         return false;
     }
