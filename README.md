@@ -18,7 +18,7 @@ Simply put the .jar in your .\plugins folder
 
 ## To Do List
 
-• Find a way to remove timed messages ingame (/tm remtmmsg)
+https://github.com/users/SkyKingPX/projects/1
 
 ## Support
 
@@ -26,7 +26,7 @@ Discord Server: Coming soon
 
 ## Collaborators
 
-• SkyproPX(, who wants to learn coding too)
+• SkyproPX( who wants to learn coding too)
 
 ## Thanks to...
 
