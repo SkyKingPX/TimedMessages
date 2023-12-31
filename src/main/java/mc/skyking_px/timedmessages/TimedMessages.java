@@ -23,12 +23,12 @@ public final class TimedMessages extends JavaPlugin {
     //Version control
     double plugin_version = 1.0;
 
-    FileConfiguration config = this.getConfig();
-
     public void loadConfiguration() {
         this.getConfig().options().copyDefaults(true);
         this.saveConfig();
     }
+
+    FileConfiguration config = this.getConfig();
 
     @Override
     public void onEnable() {
