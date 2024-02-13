@@ -1,4 +1,4 @@
-NOTE: This plugin doesn't work yet.
+NOTE: This plugin is in developement and doesn't work yet.
 
 # TimedMessages Plugin for Spigot 1.13 - 1.20+
 
