@@ -1,5 +1,7 @@
 NOTE: This plugin is in developement and doesn't work yet.
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/R6R5VHPMK)
+
 # TimedMessages Plugin for Spigot 1.13 - 1.20+
 
 Sends configured messages in the chat
