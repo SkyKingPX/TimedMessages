@@ -1,0 +1,12 @@
+name: TimedMessages
+version: '1.0'
+main: de.skyking_px.timedMessages.TimedMessages
+api-version: '1.21'
+authors: [ SkyKing_PX ]
+description: Sends configured messages in the chat
+website: https://github.com/SkyKingPX
+commands:
+  tm:
+    description: The basic command to access the plugin commands.
+    usage: /<command> reloadconfig | settmmsg | setperiod
+    permission: tm.basic

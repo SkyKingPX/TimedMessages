@@ -1,0 +1,8 @@
+# messages which are send into the chat
+messages: []
+
+# in seconds | Default: 600 = 10 minutes
+period: 600
+
+# DO NOT CHANGE!
+config-version: 1
