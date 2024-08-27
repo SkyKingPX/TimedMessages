@@ -3,6 +3,7 @@ package de.skyking_px.timedMessages;
 
 import de.skyking_px.timedMessages.additions.tmCommandTabCompletion;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -12,16 +13,21 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.logging.Level;
 
 public final class TimedMessages extends JavaPlugin implements Listener {
 
     //Version control
+
     double plugin_version = 1.0;
+    String ServerBukkitVersion = Bukkit.getServer().getBukkitVersion();
 
     public void loadConfiguration() {
         this.getConfig().options().copyDefaults(true);
@@ -65,25 +71,42 @@ public final class TimedMessages extends JavaPlugin implements Listener {
         this.getConfig().addDefault("period", 600);
 
         loadConfiguration();
+        boolean debugMode = this.getConfig().getBoolean("debug");
 
         long period = getConfig().getLong("period");
         if (period < 1){
             this.getLogger().info("Period variable is not or defined wrong. Please set a valid period with '/tm setperiod'.");
         } else if (period > 0) {
-            /*BukkitRunnable runnable = new BukkitRunnable() {
-                int var;
-                @Override
-                public void run() {
-                    String msgpath = "messages." + var;
-                    String message = config.getString(msgpath);
-                    BukkitRunnable.runTaskTimer(this, Bukkit.broadcastMessage(message), 20L * period);
+            BukkitScheduler bukkitScheduler = this.getServer().getScheduler();
+            List<String> messages = this.getConfig().getStringList("messages");
+            if (this.getConfig().getString("scheduleMessages").equalsIgnoreCase("RANDOM")) {
+
+                Random chosenMsg = new Random();
+                chosenMsg.nextInt(0, messages.size());
+
+                if (debugMode) Bukkit.getLogger().log(Level.INFO, "[TM - DEBUG] Random value for 'chosenMsg': " + chosenMsg);
+
+                bukkitScheduler.runTaskLater(this, () -> {
+                        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', messages[chosenMsg]));
+                }, 20 * period);
+
+            } else if (this.getConfig().getString("scheduleMessages").equalsIgnoreCase("ORDERED")) {
+                for (int i = 0; i < messages.size(); i++) {
+                    Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', messages[i]));
                 }
-            };*/
-            /*for (Object messages : this.getConfig().getList("messages")).add(this.getConfig().getStringList("messages" + ChatColor.translateAlternateColorCodes('&', msg)));
+            } else this.getLogger().warning(ChatColor.translateAlternateColorCodes('&', "&c[&r&3Timed&r&2Messages&r&c]&r&c Your config Value 'scheduleMessages' is not configured correctly. Please only use the values 'RANDOM' and 'ORDERED'."));
+
+
+
+
+            bukkitScheduler.runTaskLater(this, Bukkit.broadcastMessage("test"),20L * period);
+
+
+            for (Object messages : this.getConfig().getList("messages")).add(this.getConfig().getStringList("messages" + ChatColor.translateAlternateColorCodes('&', msg)));
             {
                 BukkitScheduler msgScheduler = Bukkit.getScheduler();
                 msgScheduler.runTaskTimer(this, Bukkit.broadcastMessage(messages.get(new Random().nextInt(messages.size())), 20L * period));
-            }*/
+            }
         }
 
         this.getLogger().info( "\n[]=====[Enabling TimedMessages]=====[]\n" +
@@ -96,6 +119,8 @@ public final class TimedMessages extends JavaPlugin implements Listener {
                 "|      Server: https://bit.ly/sk_px-dc\n" +
                 "|   GitHub: https://bit.ly/sk_px-gh\n" +
                 "[]==================================[]\n");
+
+        this.getLogger().info("[TimedMessages] Running Server Version " + ServerBukkitVersion + ".");
 
 
     }

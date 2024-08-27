@@ -1,8 +1,16 @@
-# messages which are send into the chat
+# Messages, which are being sent into the chat
+#
 messages: []
 
-# in seconds | Default: 600 = 10 minutes
+# Should the messages be picked and send randomly or from top to bottom (ordered)
+# Possible Values: RANDOM | ORDERED
+scheduleMessages: RANDOM
+
+# Time between each message in seconds | Default: 600 = 10 minutes
 period: 600
+
+# Debug Mode. Only use if necessary or prompted.
+debug: false
 
 # DO NOT CHANGE!
 config-version: 1
